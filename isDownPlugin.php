@@ -23,6 +23,18 @@ class isDownPlugin implements pluginInterface {
 		}
 
 		/**
+		 * @return array
+		 */
+		function help() {
+			return array(
+				array(
+					'command'     => 'isdown <hostname>',
+					'description' => 'Sends the hostname to isup.me and returns it\'s status.'
+				)
+			);
+		}
+
+		/**
 		 * Called about twice per second or when there are
 		 * activity on the channel the bot are in.
 		 *
