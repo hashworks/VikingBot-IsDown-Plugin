@@ -1,6 +1,8 @@
 <?php
 
-class isDownPlugin implements pluginInterface {
+class isDownPlugin extends basePlugin {
+
+		private $disabled;
 
 		/**
 		 * Called when plugins are loaded
@@ -8,9 +10,8 @@ class isDownPlugin implements pluginInterface {
 		 * @param mixed[]	$config
 		 * @param resource 	$socket
 		**/
-		function init($config, $socket) {
-			$this->config   = $config;
-			$this->socket   = $socket;
+		public function __construct($config, $socket) {
+			parent::__construct($config, $socket);
 			$this->disabled = false;
 			if (!ini_get('allow_url_fopen')) {
 				try {
@@ -25,22 +26,13 @@ class isDownPlugin implements pluginInterface {
 		/**
 		 * @return array
 		 */
-		function help() {
+		public function help() {
 			return array(
 				array(
 					'command'     => 'isdown <hostname>',
 					'description' => 'Sends the hostname to isup.me and returns it\'s status.'
 				)
 			);
-		}
-
-		/**
-		 * Called about twice per second or when there are
-		 * activity on the channel the bot are in.
-		 *
-		 * Put your jobs that needs to be run without user interaction here.
-		 */
-		function tick() {
 		}
 
 		/**
@@ -51,7 +43,7 @@ class isDownPlugin implements pluginInterface {
 		 * @param string $channel
 		 * @param string $msg
 		 */
-		function onMessage($from, $channel, $msg) {
+		public function onMessage($from, $channel, $msg) {
 			if ($this->disabled === true) {
 				return;
 			}
@@ -64,22 +56,7 @@ class isDownPlugin implements pluginInterface {
 			}
 		}
 
-		/**
-		 * Called when the bot is shutting down
-		 */
-		function destroy() {
-		}
-
-		/**
-		 * Called when the server sends data to the bot which is *not* a channel message, useful
-		 * if you want to have a plugin do it`s own communication to the server.
-		 *
-		 * @param string $data
-		 */
-		function onData($data) {
-		}
-
-		function checkPageStatus($page) {
+		private function checkPageStatus($page) {
 			$data = file_get_contents("http://isup.me/" . $page);
 			if (preg_match("/<div id=\"container\">[\n\r\s]*(.*)[\n\r\s]*</", $data, $matches)) {
 				$output = str_replace("  ", " ", strip_tags(html_entity_decode($matches[1])));
