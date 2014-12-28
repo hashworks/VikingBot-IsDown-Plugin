@@ -30,7 +30,7 @@ class isDownPlugin extends basePlugin {
 		return array(
 			array(
 				'command'     => 'isdown <hostname>',
-				'description' => 'Sends the hostname to isup.me and returns it\'s status.'
+				'description' => 'Sends the hostname to isup.me and returns its status.'
 			)
 		);
 	}
@@ -57,7 +57,7 @@ class isDownPlugin extends basePlugin {
 	}
 
 	private function checkPageStatus($page) {
-		$data = file_get_contents("http://isup.me/" . $page);
+		$data = @file_get_contents("http://isup.me/" . $page);
 		if (preg_match("/<div id=\"container\">[\n\r\s]*(.*)[\n\r\s]*</", $data, $matches)) {
 			$output = str_replace("  ", " ", strip_tags(html_entity_decode($matches[1])));
 			if ($output == "If you can see this page and still think we're down, it's just you.") {
