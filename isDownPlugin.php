@@ -50,6 +50,7 @@ class isDownPlugin extends basePlugin {
 		if(stringStartsWith(strtolower($msg), $this->config['trigger'] . "isdown")) {
 			$query = trim(str_replace("{$this->config['trigger']}isdown", "", $msg));
 			if (!empty($query)) {
+				sendMessage($this->socket, $channel, $from . ": Checking " . $query . "...");
 				$output = $this->checkPageStatus($query);
 				sendMessage($this->socket, $channel, $from . ": " . $output);
 			}
